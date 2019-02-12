@@ -50,22 +50,43 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const post = await Helpers.findById(req.params.id);
-        if (post.id == req.params.id) {
-            // res.status(200).json(post);
-            router.delete('/:id', async (req, res) => {
-                try {
-                    const destroy = await Helpers.remove(req.params.id);
-                    if (destroy > 0) {
-                        res.status(200).json(post);
-                    }
-                } catch (error) {
-                    console.log(error);
-                    res.status(500).json({error: "The post could not be removed"});
-                }
-            })            
+        if (post.id != req.params.id) {
+            res.status(404).json({message: "The post with the specified ID does not exist."});
         }
-    } catch {
-        res.status(404).json({message: "The post with the specified ID does not exist."});
+    }  catch {
+          res.status(500).json({error: "The post could not be removed"});
+    }
+    try{
+        const post = await Helpers.findById(req.params.id);
+                     
+        const destroy = await Helpers.remove(req.params.id);
+        if (destroy) {
+            res.status(200).json(post);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: "The post could not be removed"});
+    }
+    
+});
+
+
+//PUT updates a post
+router.put('/:id', async (req, res) => {
+    if (req.body.title == null || req.body.contents == null) {
+        res.status(400).json({errorMessage: "Please provide title and contents for the post."});
+    }
+    try {
+        const post = await Helpers.update(req.params.id, req.body);
+        console.log(post);
+        if (post == 0) {
+            res.status(404).json({message: "The post with the specified ID does not exist."});
+        } else {
+            res.status(200).json(req.body);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: "The post information could not be modified."});
     }
 });
 

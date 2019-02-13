@@ -23,7 +23,7 @@ class Posts extends React.Component {
                     <div className="IndvPost" key={this.props.posts.id}>
                         
                         <p className="Quote">{post.title}</p>
-                        <p className="Person">{post.contents}</p>
+                        <h5 className="Person">{post.contents}</h5>
                        
                         
                     </div>

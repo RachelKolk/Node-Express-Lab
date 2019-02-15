@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const post = await Helpers.findById(req.params.id);
-        if (post.id == req.params.id) {
+        if (post.length > 0) {
             res.status(200).json(post);
         } else {
             res.status(404).json({message: "The post with the specified ID does not exist."});
@@ -50,23 +50,30 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const post = await Helpers.findById(req.params.id);
-        if (post.id != req.params.id) {
+        console.log(post);
+        console.log(req.params.id);
+        if (post.length > 0) {
+         
+        try{
+            //const post = await Helpers.findById(req.params.id);
+                      
+            const destroy = await Helpers.remove(req.params.id);
+            if (destroy) {
+                res.status(200).json(post);
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({error: "The post could not be removed"});
+        }
+
+        } else    {
             res.status(404).json({message: "The post with the specified ID does not exist."});
         }
+
     }  catch {
           res.status(500).json({error: "The post could not be removed"});
     }
-    try{
-        const post = await Helpers.findById(req.params.id);
-                     
-        const destroy = await Helpers.remove(req.params.id);
-        if (destroy) {
-            res.status(200).json(post);
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({error: "The post could not be removed"});
-    }
+  
     
 });
 

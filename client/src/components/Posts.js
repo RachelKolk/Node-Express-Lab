@@ -18,7 +18,7 @@ class Posts extends React.Component {
 
     render() {
         return (
-            <div className="SmurfList">
+            <div className="PostList">
                 {this.props.posts.map((post) => (
                     <div className="IndvPost" key={this.props.posts.id}>
                         
